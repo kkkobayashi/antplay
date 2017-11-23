@@ -77,6 +77,7 @@
 	<!-- =================================
           target: checkstyle
     ================================= -->
+<!--
 	<target name="checkstyle">
 		<taskdef resource="checkstyletask.properties" classpath="${basedir}/checkstyle-8.4-all.jar" />
 		<checkstyle config="${basedir}/checkstyle.xml">
@@ -84,9 +85,11 @@
 			<formatter type="xml" tofile="${report.dir}/checkstyle_report.xml" />
 		</checkstyle>
 	</target>
+-->
 	<!-- =================================
           target: findbugs
     ================================= -->
+<!--
 	<target name="findbugs">
 		<mkdir dir="${report.dir}" />
 		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${findbugs.dir}/lib/findbugs-ant.jar">
@@ -95,11 +98,12 @@
 			<class location="${compile.dest}" />
 		</findbugs>
 	</target>
+-->
 
 	<!-- =================================
           target: junit
     ================================= -->
-	<target name="unit-test" depends="init,compile,test-compile,checkstyle,findbugs" description="execute Junit">
+	<target name="unit-test" depends="init,compile,test-compile" description="execute Junit">
 		<delete>
 			<fileset dir="${report.test.dir}" includes="TEST-*" />
 		</delete>
