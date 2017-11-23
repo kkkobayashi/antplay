@@ -1,0 +1,150 @@
+https://dev.classmethod.jp/etc/jenkins/
+http://miyohide.hatenablog.com/entry/20080506/1210035794
+http://www.techscore.com/tech/Java/ApacheJakarta/Ant/2/
+https://qiita.com/mmmm/items/fb889952f9c1fd8b4a2a
+
+
+project要素
+project要素は「build.xml」ファイルのトップレベルの要素です。1つだけ記述することが出来ます。
+
+basedir ：ビルド処理を行うベースディレクトリ。
+絶対パス、もしくはこのビルドファイルの存在するディレクトリからの相対パスで指定します。
+省略時はこのビルドファイルの存在するディレクトリがベースディレクトリとなります。
+
+
+defaultデフォルトターゲット名。
+Antの起動時にターゲット名を明示しなかったときに実行されるターゲットを指定します。（Ant1.5以降では必須でなくなりました。省略時は"main"ターゲットが実行されます。）
+
+project要素で設定される
+
+
+name: プロジェクトの名前
+default: デフォルトで実行するタスク名
+basedif: パス指定のベースになるディレクトリ
+
+target要素
+タスクの集まりをまとめたもの。実行するもの
+nameで名前をつける
+dependsはこのターゲットが他のターゲットに依存している場合、その依存しているターゲット名を指定する。
+
+task要素
+具体的な処理内容を記述する。
+コンパイルするとか、ファイルをコピーするかとかなど。
+１つのターゲット要素内に複数のタスク要素を記述することができる。
+<mkdir>はｆヒレクトリの作成
+<copy>はコピーの作成
+<javac>はコンパイル destdir:クラスファイルを保存するディレクトリ
+<fileset>は以下のディレクトリ以下のファイルをすべて対象とするときに使用
+(javacでコンパイルに必要なjarファイルにクラスパスを通すときに使用)
+やっぱり一部だけ指定したい、除外したいってこともある。それがinclude/exculde要素を使う
+
+
+
+
+property要素
+build.xmlないで使われる値を定数として定義しておくために使われる。
+
+
+<?xml version="1.0" encoding="Shift_JIS" ?>
+
+<project name="antsample">
+
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+
+  <target name="target1">
+    <javac srcdir="${src}" destdir="${build}"/>
+    <copy file="myfile.txt" tofile="mycopy.txt"/>
+  </target>
+
+  <target name="target2">
+    <echo message="Hello, world"/>
+  </target>
+
+</project>
+
+nameにてsrcという名前をつけた。
+
+
+
+----------------------------------------------------------------
+-----------------------------------------------------------------
+
+
+FindBugs を build.xml (Ant ビルドスクリプト) に組み入れるためにはまず、タスク定義を記述する必要があります。タスク定義は次のように記述します。:
+ <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+
+
+junitだけは、なぜか指定しないといけなかったくさい。
+
+testのときに
+
+
+			<batchtest fork="yes" todir="${report.test.dir}">
+				<fileset dir="${compile.test.src}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+
+			となっていたので
+
+<fileset dir="${compile.test.src}">
+					<include name="test/*Test.java" />
+				</fileset>
+にすればなおった。
+
+
+
+また、これでよかった。
+junit-4.12.jarをlibにば解決するくさい
+
+				<fileset dir="${basedir}/lib">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement location="${play.dir}/lib/junit-4.12.jar" />
+
+
+会社の
+build.xmlのplay.dirどこにあったかみる
+
+
+
+<path id="compile.classpath">
+  <fileset dir="lib">
+    <include name="**/*.jar" />
+  </fileset>
+  <pathelement location="classes" />
+</path>
+<javac srcdir="src" destdir="target/classpath" classpathref="compile.classpath"
+
+この書き方がいい。使用するやつをidで指定。
+javacの変数classpathrefでこのidを参照。
+
+
+
+<property name="src" location="../app"/>
+戻るときは../。
+build.xmlの位置が.
+
+
+
+
+<fileset dir="${webapp}">
+	<include name="*/*.java" />
+</fileset>
+
+で全部のjavaファイルをみるようにしとく
+
+
+使ってないのにmodelsなどをインポートしてると
+buildに引っかかるので注意する
+
+
+
+
+-----------------------------------------------------------------
+----------------------------------------------------------------
+
+次は、あれで実行
+
