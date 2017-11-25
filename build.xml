@@ -86,6 +86,7 @@
 	</target>
 -->
 
+
 	<taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${webapp}/lib/checkstyle-8.4-all.jar" />
 	<target name="checkstyle" description="Javaコンパイル">
 		<javac srcdir="${compile.src}" destdir="${compile.dest}" debug="true" debuglevel="vars,lines,source" includeantruntime="false" />
@@ -93,13 +94,15 @@
 
 	<target name="run.checkstyle" description="実行">
 		<checkstyle config="${basedir}/checkstyle_checks.xml" failOnViolation="false">
-			<fileset dir="${basedir}" includes="**/*.java" excludes="test/**" />
+			<fileset dir="${compile.src}" includes="**/*.java" excludes="test/**" />
 			<property key="checkstyle.header.file" value="${basedir}/java.header" />
 			<property key="checkstyle.suppressions.file" value="${basedir}/suppressions.xml" />
 			<property key="checkstyle.importcontrol.file" value="${basedir}/import-control.xml" />
 			<formatter type="xml" tofile="${report.dir}/checkstyle_report.xml" />
 		</checkstyle>
 	</target>
+
+
 
 
 	<!-- =================================
