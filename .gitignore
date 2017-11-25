@@ -22,14 +22,6 @@
 hs_err_pid*
 
 # 特定のディレクトリを無視する場合は先頭と末尾に/を付ける
-eclipse/*
-conf/*
-.settings/*
-.git/*
-classes/*
-findbugs/*
-target/*
-
 eclipse/
 conf/
 .settings/
@@ -37,3 +29,11 @@ conf/
 classes/
 findbugs/
 target/
+
+/eclipse/
+/conf/
+/.settings/
+/.git/
+/classes/
+/findbugs/
+/target/
