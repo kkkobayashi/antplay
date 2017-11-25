@@ -39,6 +39,13 @@ task要素
 やっぱり一部だけ指定したい、除外したいってこともある。それがinclude/exculde要素を使う
 
 
+Ant：taskdef
+ant内で新しいタスクを定義するコアタスク。
+<taskdef name="hoge" classname="jp.hishidama.Hoge"/>
+	<target name="sample">
+		<hoge/>
+	</target
+
 
 
 property要素
@@ -140,6 +147,12 @@ build.xmlの位置が.
 使ってないのにmodelsなどをインポートしてると
 buildに引っかかるので注意する
 
+
+
+eclipseにあるfindbusフォルダの中身は
+DLしたものをそのままいれないといけなかった。
+
+${findbugs.dir}がこれ。
 
 
 

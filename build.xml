@@ -59,8 +59,6 @@
 			</fileset>
 			<pathelement location="${play.dir}/lib/junit-4.12.jar" />
 
-
-
 		</path>
 
 		<javac srcdir="${compile.test.src}" destdir="${compile.test.dest}" encoding="UTF-8" includeantruntime="false" classpathref="compile.classpath">
@@ -77,33 +75,49 @@
 	<!-- =================================
           target: checkstyle
     ================================= -->
-<!--
+
+	<!--
 	<target name="checkstyle">
-		<taskdef resource="checkstyletask.properties" classpath="${basedir}/checkstyle-8.4-all.jar" />
+		<taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${basedir}/checkstyle-8.4-all.jar" />
 		<checkstyle config="${basedir}/checkstyle.xml">
 			<fileset dir="${basedir}" includes="**/*.java" excludes="test/**" />
 			<formatter type="xml" tofile="${report.dir}/checkstyle_report.xml" />
 		</checkstyle>
 	</target>
 -->
+
+	<taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="${webapp}/lib/checkstyle-8.4-all.jar" />
+	<target name="checkstyle" description="Javaコンパイル">
+		<javac srcdir="${compile.src}" destdir="${compile.dest}" debug="true" debuglevel="vars,lines,source" includeantruntime="false" />
+	</target>
+
+	<target name="run.checkstyle" description="実行">
+		<checkstyle config="${basedir}/checkstyle_checks.xml" failOnViolation="false">
+			<fileset dir="${basedir}" includes="**/*.java" excludes="test/**" />
+			<property key="checkstyle.header.file" value="${basedir}/java.header" />
+			<property key="checkstyle.suppressions.file" value="${basedir}/suppressions.xml" />
+			<property key="checkstyle.importcontrol.file" value="${basedir}/import-control.xml" />
+			<formatter type="xml" tofile="${report.dir}/checkstyle_report.xml" />
+		</checkstyle>
+	</target>
+
+
 	<!-- =================================
           target: findbugs
     ================================= -->
-<!--
 	<target name="findbugs">
-		<mkdir dir="${report.dir}" />
-		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${findbugs.dir}/lib/findbugs-ant.jar">
-		</taskdef>
+		<mkdir dir="${reports.dir}" />
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${webapp}/lib/findbugs-ant.jar" />
 		<findbugs home="${findbugs.dir}" output="xml" outputFile="${report.dir}/findbugs_report.xml">
 			<class location="${compile.dest}" />
 		</findbugs>
 	</target>
--->
+
 
 	<!-- =================================
           target: junit
     ================================= -->
-	<target name="unit-test" depends="init,compile,test-compile" description="execute Junit">
+	<target name="unit-test" depends="init,compile,test-compile,checkstyle,findbugs" description="execute Junit">
 		<delete>
 			<fileset dir="${report.test.dir}" includes="TEST-*" />
 		</delete>
