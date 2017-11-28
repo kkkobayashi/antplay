@@ -21,7 +21,6 @@
 		<delete dir="${compile.dest}" />
 		<delete dir="${compile.test.dest}" />
 		<delete dir="${report.dir}" />
-		<delete dir="${report.test.dir}" />
 	</target>
 	<!-- =================================
           target: compile
