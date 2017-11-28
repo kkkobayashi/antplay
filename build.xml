@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="JenkinsSample" default="unit-test" basedir=".">
-	<property name="play.dir" value="C:/opt/play-1.4.5/play-1.4.5/framework" />
+	<!-- 実行者によって依存 -->
+	<property name="play.dir" value="C:/opt/play1/framework" />
 	<property name="webapp" value="${basedir}" />
 	<property name="compile.src" location="${basedir}/app" />
 	<!--   <property name="compile.resources" location="${basedir}/src/main/resources"/> -->
@@ -12,6 +13,7 @@
 	<property name="findbugs.dir" value="${basedir}/findbugs" />
 	<property name="report.dir" value="${basedir}/report" />
 	<property name="report.test.dir" value="${basedir}/report/test" />
+
 	<!-- =================================
           target: init
          ================================= -->
@@ -21,7 +23,8 @@
 	</target>
 	<!-- =================================
           target: compile
-         ================================= -->
+	================================= -->
+
 	<target name="compile" depends="clean">
 		<mkdir dir="${compile.dest}" />
 		<path id="compile.classpath">
@@ -34,17 +37,17 @@
 			</fileset>
 
 			<pathelement location="${play.dir}/lib/junit-4.12.jar" />
-
-
 		</path>
-		<javac srcdir="${compile.src}" destdir="${compile.dest}" encoding="UTF-8" includeantruntime="false" classpathref="compile.classpath">
 
+		<javac srcdir="${compile.src}" destdir="${compile.dest}" encoding="UTF-8" includeantruntime="false" classpathref="compile.classpath">
 		</javac>
+
 		<!--
         <copy todir="${compile.dest}">
             <fileset dir="${compile.resources}"/>
         </copy>
 		-->
+
 	</target>
 	<target name="test-compile">
 		<mkdir dir="${compile.test.dest}" />
@@ -98,10 +101,9 @@
 			<property key="checkstyle.header.file" value="${basedir}/java.header" />
 			<property key="checkstyle.suppressions.file" value="${basedir}/suppressions.xml" />
 			<property key="checkstyle.importcontrol.file" value="${basedir}/import-control.xml" />
-			<formatter type="xml" tofile="${report.dir}/checkstyle_report.xml" />
+			<formatter type="xml" extention=".xml" tofile="${report.dir}/checkstyle_report.xml" />
 		</checkstyle>
 	</target>
-
 
 
 
@@ -125,7 +127,7 @@
 			<fileset dir="${report.test.dir}" includes="TEST-*" />
 		</delete>
 		<junit fork="yes" haltonfailure="false">
-			<formatter type="xml" usefile="true" />
+			<formatter type="xml" extention=".xml" usefile="true" />
 			<classpath>
 				<fileset dir="${basedir}/lib">
 					<include name="*.jar" />
@@ -137,7 +139,6 @@
 
 				<pathelement location="${play.dir}/lib/junit-4.12.jar" />
 
-
 				<!--
                 <fileset dir="${webapp}/WEB-INF/lib">
                    <include name="*.jar"/>
@@ -146,6 +147,7 @@
 				<pathelement location="${compile.dest}" />
 				<pathelement location="${compile.test.dest}" />
 			</classpath>
+
 			<batchtest fork="yes" todir="${report.test.dir}">
 				<fileset dir="${compile.test.src}">
 					<include name="test/*Test.java" />

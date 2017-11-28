@@ -2,6 +2,7 @@ https://dev.classmethod.jp/etc/jenkins/
 http://miyohide.hatenablog.com/entry/20080506/1210035794
 http://www.techscore.com/tech/Java/ApacheJakarta/Ant/2/
 https://qiita.com/mmmm/items/fb889952f9c1fd8b4a2a
+http://www.techscore.com/tech/Java/ApacheJakarta/Ant/7-2/
 
 
 project要素
@@ -37,6 +38,8 @@ task要素
 <fileset>は以下のディレクトリ以下のファイルをすべて対象とするときに使用
 (javacでコンパイルに必要なjarファイルにクラスパスを通すときに使用)
 やっぱり一部だけ指定したい、除外したいってこともある。それがinclude/exculde要素を使う
+<path>は、classなどを指定するときに主に利用
+<test>や<batchtest>はjunitを実行するときに使われ、結果後に出力するreportのディレクトリなど指定
 
 
 Ant：taskdef
@@ -159,5 +162,8 @@ ${findbugs.dir}がこれ。
 -----------------------------------------------------------------
 ----------------------------------------------------------------
 
-次は、あれで実行
+jenkinsのant指定のターゲットは
+ここに定義している、targetの名前
+
+
 

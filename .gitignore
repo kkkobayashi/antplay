@@ -1,5 +1,9 @@
 # Compiled class file
 *.class
+.classpath
+.project
+*.conf
+conf/log4j.properties
 
 # Log file
 *.log
@@ -22,15 +26,20 @@ hs_err_pid*
 
 # 特定のディレクトリを無視する場合は先頭と末尾に/を付ける
 eclipse/
-conf/
 .settings/
 .git/
 classes/
 target/
+report/
 
 /eclipse/
-/conf/
 /.settings/
 /.git/
 /classes/
 /target/
+/report/
+
+# 追加しても実行できないとき
+# git rm -r --cached .classpath
+# git rm -r --cached report
+# のように git rm -r --cached だと、 すべてになるのであまりおすすめしない

@@ -1,0 +1,557 @@
+# This is the main configuration file for the application.
+
+# 起動時のアプリケーションモード指定
+# play start  --%applicationId
+#~~~~~~~
+# %prod_app : 本番環境APサーバ
+# %prod_bat : 本番環境バッチサーバ
+# %staging : 本番テスト環境(AP+バッチ)サーバ
+# %dev_app : 社内テスト環境APサーバ
+# %dev_bat : 社内テスト環境バッチサーバ
+# 未指定          : ローカル環境(AP+バッチ)サーバ
+
+
+# ~~~~~
+application.name=credit_service
+
+# Application mode
+# ~~~~~
+# Set to dev to enable instant reloading and other development help.
+# Otherwise set to prod.
+application.mode=dev
+%prod_app.application.mode=prod
+%prod_bat.application.mode=prod
+%staging.application.mode=dev
+
+# Secret key
+# ~~~~~
+# The secret key is used to secure cryptographics functions
+# If you deploy your application to several instances be sure to use the same key !
+application.secret=CbcHS3GOVlJS9LJU2k5SDGQCb9Z0VaVwDqTKteax2ngSqqVcExV4ljy0l2JRB8QK
+
+# i18n
+# ~~~~~
+# Define locales used by your application.
+# You can then place localized messages in conf/messages.{locale} files
+application.langs=ja,en,zh,ko
+
+# Date format
+# ~~~~~
+date.format=yyyy/MM/dd
+# date.format.fr=dd/MM/yyyy
+
+# Server configuration
+# ~~~~~
+# If you need to change the HTTP port, uncomment this (default is set to 9000)
+http.port=9000
+#
+# By default the server listen for HTTP on the wilcard address.
+# You can restrict this.
+# http.address=127.0.0.1
+#
+# Use this if you don't host your Play application at the root of the domain
+# you're serving it from. This parameter has no effect when deployed as a
+# war, because the path will be handled by the application server.
+http.path=/service
+#
+# HTTP response PlayServer Header
+http.exposePlayServer = false
+
+#https.port=443
+## X509 certificates
+#certificate.key.file=conf/ssl/local.key
+#certificate.file=conf/ssl/local.cert
+## In case your key file is password protect
+##certificate.password=secret
+#keystore.algorithm=JKS
+#keystore.password=password
+#keystore.file=conf/ssl/keystore.jks
+
+
+# Session configuration
+# ~~~~~~~~~~~~~~~~~~~~~~
+# By default, session will be written to the transient PLAY_SESSION cookie.
+# The cookies are not secured by default, only set it to true
+# if you're serving your pages through https.
+application.session.cookie=_
+# application.session.maxAge=1h
+application.session.timeout=1h
+application.session.secure=false
+application.session.httpOnly=true
+%prod_app.application.session.secure=true
+%prod_bat.application.session.secure=true
+%staging.application.session.secure=true
+
+# Session/Cookie sharing between subdomain
+# ~~~~~~~~~~~~~~~~~~~~~~
+# By default a cookie is only valid for a specific domain. By setting
+# application.defaultCookieDomain to '.example.com', the cookies
+# will be valid for all domains ending with '.example.com', ie:
+# foo.example.com and bar.example.com
+# application.defaultCookieDomain=.example.com
+
+# JVM configuration
+# ~~~~~
+# Define which port is used by JPDA when application is in debug mode (default is set to 8000)
+jpda.port=8000
+#
+# Java source level => 1.6, 1.7 or 1.8 (experimental)
+java.source=1.8
+#
+# JVM options
+#jvm.memory=-Xmx8g
+
+# Log level
+# ~~~~~
+# Specify log level for your application.
+# If you want a very customized log, create a log4j.properties file in the conf directory
+# application.log=INFO
+#
+# More logging configuration
+application.log.path=/log4j.properties
+application.log.system.out=off
+
+# Database configuration
+# ~~~~~
+# Enable a database engine if needed.
+#
+# To quickly set up a development database, use either:
+#   - mem : for a transient in memory database (H2 in memory)
+#   - fs  : for a simple file written database (H2 file stored)
+# db.default=mem
+#
+# To connect to a local MySQL5 database, use:
+# db.default=mysql://user:pwd@host/database
+#
+# To connect to a local PostgreSQL9 database, use:
+# db=postgres://user:pwd@host/database
+#
+# If you need a full JDBC configuration use the following :
+# db.default.url=jdbc:postgresql:database_name
+# db.default.driver=org.postgresql.Driver
+# db.default.user=root
+# db.default.pass=secret
+
+db.url=jdbc:log4jdbc:postgresql://127.0.0.1:5432/neocredit?currentSchema=credit
+db.driver=net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+db.testquery=SELECT 1
+#db.url=jdbc:postgresql://127.0.0.1:5432/neocredit?currentSchema=credit&prepareThreshold=0
+#db.driver=org.postgresql.Driver
+db.user=postgres
+db.pass=postgres
+
+%prod_app.db.url=jdbc:postgresql://192.168.12.200:9999/neocredit?currentSchema=credit&prepareThreshold=0
+%prod_app.db.driver=org.postgresql.Driver
+%prod_app.db.user=alij
+%prod_app.db.pass=alijadmin
+%prod_bat.db.url=jdbc:postgresql://192.168.12.200:9999/neocredit?currentSchema=credit&prepareThreshold=0&ApplicationName=credit_batch
+%prod_bat.db.driver=org.postgresql.Driver
+%prod_bat.db.user=alij
+%prod_bat.db.pass=alijadmin
+
+#
+# Connections pool configuration :
+# db.default.pool.timeout=1000
+db.default.pool.maxSize=100
+# db.default.pool.minSize=10
+#
+# If you want to reuse an existing Datasource from your application server, use:
+# db.default=java:/comp/env/jdbc/myDatasource
+#
+# When using an existing Datasource, it's sometimes needed to destroy it when
+# the application is stopped. Depending on the datasource, you can define a
+# generic "destroy" method :
+# db.default.destroyMethod=close
+
+# JPA Configuration (Hibernate)
+# ~~~~~
+#
+# Specify the custom JPA dialect to use here (default to guess):
+jpa.default.dialect=org.hibernate.dialect.PostgreSQLDialect
+#
+# Specify the ddl generation pattern to use. Set to none to disable it
+# (default to update in DEV mode, and none in PROD mode):
+jpa.default.ddl=none
+#
+# Debug SQL statements (logged using DEBUG level):
+# jpa.default.debugSQL=true
+#
+# You can even specify additional hibernate properties here:
+# default.hibernate.use_sql_comments=true
+hibernate.cache.use_second_level_cach=false
+hibernate.jdbc.batch_size=20
+# ...
+#
+# Store path for Blob content
+attachments.path=data/attachments
+
+# Memcached configuration
+# ~~~~~
+# Enable memcached if needed. Otherwise a local cache is used.
+# memcached=enabled
+#
+# Specify memcached host (default to 127.0.0.1:11211)
+# memcached.host=127.0.0.1:11211
+#
+# Or you can specify multiple host to build a distributed cache
+# memcached.1.host=127.0.0.1:11211
+# memcached.2.host=127.0.0.1:11212
+#
+# Use plain SASL to authenticate for memcached
+# memcached.user=
+# memcached.password=
+
+# Redis configuration
+# ~~~~~
+# Enable redis if needed. Otherwise a local cache is used.
+#redis=enabled
+redis.url=redis://127.0.0.1:6379
+%prod_app.redis.url=redis://192.168.12.103:6379
+%prod_bat.redis.url=redis://192.168.12.103:6379
+
+# HTTP Response headers control for static files
+# ~~~~~
+# Set the default max-age, telling the user's browser how long it should cache the page.
+# Default is 3600 (one hour). Set it to 0 to send no-cache.
+# This is only read in prod mode, in dev mode the cache is disabled.
+# http.cacheControl=3600
+
+# If enabled, Play will generate entity tags automatically and send a 304 when needed.
+# Default is true, set it to false to deactivate use of entity tags.
+# http.useETag=true
+
+# Custom mime types
+# mimetype.xpi=application/x-xpinstall
+
+# WS configuration
+# ~~~~~
+# Default engine is Async Http Client, uncomment to use
+# the JDK's internal implementation
+# webservice = urlfetch
+# If you need to set proxy params for WS requests
+# http.proxyHost = localhost
+# http.proxyPort = 3128
+# http.proxyUser = jojo
+# http.proxyPassword = jojo
+# http.connectTimeout=60000
+# http.requestTimeout=60000
+# http.readTimeout=-1
+ssl.cavalidation=false
+
+
+# Mail configuration
+# ~~~~~
+# Default is to use a mock Mailer
+# Or, specify mail host configuration
+mail.smtp.host=mail.alij.ne.jp
+mail.smtp.port=587
+mail.smtp.user=credit-master
+mail.smtp.pass=alijsystem0606!
+# mail.smtp.channel=ssl
+%prod_app.mail.smtp.host=192.168.11.104
+%prod_app.mail.smtp.port=25
+%prod_bat.mail.smtp.host=192.168.11.104
+%prod_bat.mail.smtp.port=25
+# 迷惑メール対策プロバイダ経由で送信する
+alij.ne.jp.mail.smtp.host=mail.alij.ne.jp
+alij.ne.jp.mail.smtp.port=587
+alij.ne.jp.mail.smtp.user=credit-master
+alij.ne.jp.mail.smtp.pass=alijsystem0606!
+# 迷惑メール対策プロバイダ経由で送信する
+alpha-note.co.jp.mail.smtp.host=sv8.xtwo.ne.jp
+alpha-note.co.jp.mail.smtp.port=587
+alpha-note.co.jp.mail.smtp.user=credit-master@alpha-note.co.jp
+alpha-note.co.jp.mail.smtp.pass=alijsystem0606
+
+
+
+
+# Url-resolving in Jobs
+# ~~~~~~
+# When rendering templates with reverse-url-resoling (@@{..}) in Jobs (which do not have an inbound Http.Request),
+# ie if sending a HtmlMail, Play need to know which url your users use when accessing your app.
+# %test.application.baseUrl=http://localhost:9000/
+# %prod.application.baseUrl=http://www.yourdomain.com/
+XForwardedSupport=ALL
+
+
+# Execution pool
+# ~~~~~
+# Default to 1 thread in DEV mode or (nb processors + 1) threads in PROD mode.
+# Try to keep a low as possible. 1 thread will serialize all requests (very useful for debugging purpose)
+#play.pool=
+%prod_app.play.pool=64
+%prod_bat.play.pool=64
+
+# Jobs executor
+# ~~~~~~
+# Size of the Jobs pool
+play.jobs.pool=128
+
+
+# バッチ実行スレッ分割ド数
+# ~~~~~~
+# 明細作成等の重たいバッチ処理を分割する際のスレッド数(分割数)
+# play.jobs.pool より小さい値となること
+batch.receipt.jobs.pool=4
+batch.cont.jobs.pool=4
+%prod_bat.batch.receipt.jobs.pool=4
+%prod_bat.batch.cont.jobs.pool=4
+
+# Netty pipeline configuration (advanced settings)
+# You can default netty settings by overriding the following line. Each handler must be comma separated.
+# The last value must be the PlayHandler class (or your own that extends PlayHandler)
+# Default values are
+# play.netty.pipeline = play.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,play.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.stream.ChunkedWriteHandler,play.server.PlayHandler
+# For example, to enable Netty response compression
+# play.netty.pipeline = play.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,play.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.codec.http.HttpContentCompressor,org.jboss.netty.handler.stream.ChunkedWriteHandler,play.server.PlayHandler
+# For SSL, use the play.ssl.netty.pipeline property
+# play.ssl.netty.pipeline = play.server.FlashPolicyHandler,org.jboss.netty.handler.codec.http.HttpRequestDecoder,play.server.StreamChunkAggregator,org.jboss.netty.handler.codec.http.HttpResponseEncoder,org.jboss.netty.handler.codec.http.HttpContentCompressor,org.jboss.netty.handler.stream.ChunkedWriteHandler,play.server.ssl.SslPlayHandler
+
+
+# Open file from errors pages
+# ~~~~~
+# If your text editor supports opening files by URL, Play! will
+# dynamically link error pages to files
+#
+# Example, for textmate:
+# play.editor=txmt://open?url=file://%s&line=%s
+
+# Testing. Set up a custom configuration for test mode
+# ~~~~~
+#%test.module.cobertura=${play.path}/modules/cobertura
+%test.application.mode=dev
+%test.db.url=jdbc:h2:mem:play;MODE=MYSQL;LOCK_MODE=0
+%test.jpa.ddl=create
+%test.mail.smtp=mock
+
+
+# Key files
+# ~~~~~~~~~
+keyfile.datakey=conf/key/data/datakey.dat
+keyfile.keykey=conf/key/key/keykey.dat
+%prod_app.keyfile.datakey=/etc/credit_service/data/datakey.dat
+%prod_app.keyfile.keykey=/etc/credit_service/key/keykey.dat
+%prod_bat.keyfile.datakey=/etc/credit_service/data/datakey.dat
+%prod_bat.keyfile.keykey=/etc/credit_service/key/keykey.dat
+%staging.keyfile.datakey=/etc/credit_service/data/datakey.dat
+%staging.keyfile.keykey=/etc/credit_service/key/keykey.dat
+
+
+# Crons
+# ~~~~~
+cron.RateBank=never
+cron.CleanTable=never
+cron.ClearTemp=0 0 0 * * ?
+cron.AppStatus=0 0 0/1 * * ?
+cron.DashboardSummary=never
+cron.infox=never
+cron.CreateUnpaidTransfer=never
+cron.BankTran=never
+cron.BankTranRelease=never
+cron.BankTranStride=never
+cron.AccountDistForceTempValid=never
+cron.ClearAccountLock=never
+cron.Cds=never
+cron.CdsIc=never
+cron.ContSetl=never
+cron.DelaySetl=never
+cron.CsvSetl=never
+cron.CreditCancel=never
+cron.SiteValid=never
+cron.ChinaSmartApiStatusCheck=never
+cron.ChinaSmartCsvStatusCheck=never
+
+cron.SummaryBankTranProcessor=never
+cron.SummaryBankTranSite=never
+cron.SummaryBusiness=never
+cron.SummaryProcessor=never
+cron.SummarySite=never
+
+%prod_bat.cron.RateBank=0 0 11 * * ?
+%prod_bat.cron.CleanTable=0 0 0 * * ?
+%prod_bat.cron.ClearTemp=0 0 0 * * ?
+%prod_bat.cron.CleanCache=0 0 0 * * ?
+%prod_bat.cron.AppStatus=0 0 0/1 * * ?
+%prod_bat.cron.DashboardSummary=0 0/30 * * * ?
+%prod_bat.cron.Infox=0 0 5 * * ?
+%prod_bat.cron.CreateUnpaidTransfer=0 0 0 1 * ?
+%prod_bat.cron.CreateUnpaidPeriod=0 10 0 1 * ?
+%prod_bat.cron.BankTran=0 0/15 * * * ?
+%prod_bat.cron.BankTranAlert=0 0 7 * * ?
+%prod_bat.cron.BankTranRelease=never
+%prod_bat.cron.BankTranStride=0 30 0 * * ?
+%prod_bat.cron.BankTranNoReport=0 0 9 * * ?
+%prod_bat.cron.AccountDistForceTempValid=0 0/15 * * * ?
+%prod_bat.cron.ClearAccountLock=0 0/30 * * * ?
+%prod_bat.cron.Cds=0 0 9 * * ?
+%prod_bat.cron.CdsIc=0 15 9 * * ?
+%prod_bat.cron.ContSetl=0 0 12 * * ?
+%prod_bat.cron.DelaySetl=0 0 7 * * ?
+%prod_bat.cron.CsvSetl=0 0 11 * * ?
+%prod_bat.cron.CreditCancel=0 0 4 * * ?
+%prod_bat.cron.SiteValid=0 0 0 * * ?
+%prod_bat.cron.WalletExpire=0 5 0 * * ?
+%prod_bat.cron.SiteCheck=0 0 9 * * ?
+%prod_bat.cron.SummaryReport=0 1 9 * * ?
+%prod_bat.cron.ChinaSmartApiStatusCheck=0 0 3 * * ?
+%prod_bat.cron.ChinaSmartCsvStatusCheck=never
+
+
+# 社内IPアドレス(カンマ区切りで複数指定,サブネット指定可)
+# ~~~~~
+manage.ip=127.0.0.1/8,192.168.1.0/24,192.168.10.0/24,192.168.11.0/24,153.156.73.189,153.156.73.190
+
+# 管理端末IP(カード番号フル桁表示専用)
+# ~~~~~
+manage.secure.ip=192.168.1.0/24,153.156.73.190
+
+
+# 処理会社IPアドレス・ドメイン名(サブネット指定不可) @types.ProcessorType
+# (アクセスしたURLにより処理会社を切り替え)
+# ~~~~~
+processor.ALIJ=localhost
+processor.ALPHA=127.0.0.1
+%staging.processor.ALIJ=test-payment.alij.ne.jp
+%staging.processor.ALPHA=test-payment.alpha-note.co.jp
+%prod_app.processor.ALIJ=payment.alij.ne.jp
+%prod_app.processor.ALPHA=payment.alpha-note.co.jp
+
+# LOGIN LOCKOUT
+# ~~~~~
+# アカウントがロックされる連続失敗回数
+secure.lockout.count=6
+# アカウントロックが解除されるまでのインターバル (60s,30mn,1h,3d..)
+secure.lockout.clear=30
+# パスワード有効期限(日)
+secure.password.expire=90
+
+# Recipt Batch ServerURL
+# ~~~~~
+batch.server.url=http://localhost:9000
+%prod_app.batch.server.url=http://192.168.11.103:9000
+%prod_bat.batch.server.url=http://192.168.11.103:9000
+
+
+
+# Chatwork API
+# ~~~~~
+chatwork.api.token=ce1828dff424fed3c901f5e6e17d9269
+
+# Slack API
+# ~~~~~
+#slack.webhook.url=https://hooks.slack.com/services/Txxxxxxxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxx
+slack.webhook.url=https://hooks.slack.com/services/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
+
+# IVR電話認証 API
+# ~~~~~~~~~~~~~~~~~~~~~
+#開発環境
+ivr.server.url=http://dhkdemo.spv.jp/alij/
+ivr.telno=0120-924-224
+#本番環境
+#ivr.server.url=https://alij.spv.jp/
+#ivr.telno=0120-924-224
+
+# 一覧表示件数
+search.list.size=100
+
+
+
+# Edy実行モジュールパス
+# ~~~~~
+#edy.mobileEdy.path=
+#edy.mobileEdy.passThrough=false
+
+# GoogleAnalytics
+# ~~~~~
+%prod_app.google.tracking.id.master=UA-75271768-1
+%prod_app.google.tracking.id.manager=UA-75271768-2
+%prod_app.google.tracking.id.payment=UA-75271768-3
+%prod_app.google.tracking.id.mypage=UA-75271768-5
+%prod_bat.google.tracking.id.master=UA-75271768-1
+%prod_bat.google.tracking.id.manager=UA-75271768-2
+%prod_bat.google.tracking.id.payment=UA-75271768-3
+%stage.google.tracking.id.master=UA-75270152-1
+%stage.google.tracking.id.manager=UA-75270152-2
+%stage.google.tracking.id.payment=UA-75270152-3
+
+# Google Calendar
+# ~~~~~
+google.calendar.apikey=AIzaSyAE6KV4IgDKFjNsx7cX66wRGmzHvQpc4Cc
+google.calendar.holidayId=japanese__ja@holiday.calendar.google.com
+
+# 旧システムへの更新情報送信
+# ~~~~~
+system.convertDataAPI=false
+#system.convert.server.alij=https://credit.alij.ne.jp/service/convertNeoData.html
+#system.convert.server.alpha=https://credit.alpha-note.co.jp/service/convertNeoData.html
+#system.convert.server.nsystem=http://meisai.credit-detail.ne.jp/master/convertNeoData.html
+#system.convert.user.id=convertid
+#system.convert.user.pass=alij0606
+# 旧システムからの接続IPアドレス(カンマ区切りで複数指定,サブネット指定可)
+system.oldmaster.ips=61.211.235.68/28
+
+# WatcherAppenderの使用
+# ~~~~~
+application.log.watcher=false
+%prod_app.application.log.watcher=true
+%prod_bat.application.log.watcher=true
+
+# CAFIS, CAPS
+# ~~~~~
+caps.companyCode=2S366480002
+
+# CDS SFTP送信先
+# (.105はCDSセンタ試験環境)
+# ~~~~~
+cds.sftp.server=172.16.11.101
+cds.sftp.port=22
+cds.sftp.username=alij
+cds.sftp.userCd=7706800000_____
+cds.sftp.privkey=conf/key/cds/sftp.id_rsa
+#%prod_bat.cds.sftp.server=210.144.73.104
+##%prod_bat.cds.sftp.server=210.144.73.105
+#%prod_bat.cds.sftp.port=22
+#%prod_bat.cds.sftp.username=78000007
+#%prod_bat.cds.sftp.userCd=7706800000_____
+#%prod_bat.cds.sftp.privkey=/etc/credit_service/cds/sftp.id_rsa
+
+# 決済画面のタイムアウト
+# ~~~~~
+payment.session.timeout=24h
+
+# ダミーテストカード
+# (READYモード時、スルーしてトランザクションを残さない)
+# ~~~~~
+system.dammycard=4000000000000000,5000000000000000,3500000000000000,36000000000000,370000000000000
+
+# テストサーバモード
+# (本番サーバかテストサーバか背景色の変更等)
+# ~~~~~
+#test.server=true
+#master.service.name=LOCAL
+# エラー画面にstacktraceを表示するか
+#play.errors.stacktrace=false
+
+# 端末更新通知
+# ~~~~~
+#terminal.update.notice=true
+
+# SMS API
+# ~~~~~
+aos.api.token=d50f151f4ab09a6d6df9f5cb1aee8aaa
+aos.api.clientId=681
+aos.api.smsCode=80824
+
+# トークン決済のトークン有効期限(h,min)
+tokenpay.expire=30min
+
+# Filemaker連携
+# ~~~~~
+#filemaker.server.url=http://153.156.73.189/fm_api
+filemaker.server.url=http://192.168.1.62/fm_api
+
+#PUSHサーバURL
+push.service.api.endpoint=https://push.alij.ne.jp/a_push/push/
+push.service.api.useregister=https://push.alij.ne.jp/a_push/customer/register.html?
+push.service.register=https://payment.alij.ne.jp/service/push/response.html
