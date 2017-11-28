@@ -14,18 +14,20 @@
 	<property name="report.dir" value="${basedir}/report" />
 	<property name="report.test.dir" value="${basedir}/report/test" />
 
-	<!-- =================================
-          target: init
-         ================================= -->
+	<!-- =============================================
+          target: init 出力先のディレクトリをすべて削除
+         ========================================== -->
 	<target name="init" description="initialize">
-		<mkdir dir="${report.test.dir}" />
-		<delete file="${report.dir}/**/*.xml" />
+		<delete dir="${compile.dest}" />
+		<delete dir="${compile.test.dest}" />
+		<delete dir="${report.dir}" />
+		<delete dir="${report.test.dir}" />
 	</target>
 	<!-- =================================
           target: compile
 	================================= -->
 
-	<target name="compile" depends="clean">
+	<target name="compile">
 		<mkdir dir="${compile.dest}" />
 		<path id="compile.classpath">
 			<fileset dir="${webapp}/lib">
@@ -111,7 +113,7 @@
           target: findbugs
     ================================= -->
 	<target name="findbugs">
-		<mkdir dir="${reports.dir}" />
+		<mkdir dir="${report.dir}" />
 		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${webapp}/lib/findbugs-ant.jar" />
 		<findbugs home="${findbugs.dir}" output="xml" outputFile="${report.dir}/findbugs_report.xml">
 			<class location="${compile.dest}" />
@@ -123,9 +125,8 @@
           target: junit
     ================================= -->
 	<target name="unit-test" depends="init,compile,test-compile,checkstyle,findbugs" description="execute Junit">
-		<delete>
-			<fileset dir="${report.test.dir}" includes="TEST-*" />
-		</delete>
+
+		<mkdir dir="${report.test.dir}" />
 		<junit fork="yes" haltonfailure="false">
 			<formatter type="xml" usefile="true" />
 			<classpath>
@@ -154,12 +155,5 @@
 				</fileset>
 			</batchtest>
 		</junit>
-	</target>
-	<!-- =================================
-            target: clean
-        ================================= -->
-	<target name="clean" description="clean up">
-		<delete dir="${compile.dest}" />
-		<delete dir="${compile.test.dest}" />
 	</target>
 </project>
