@@ -127,7 +127,7 @@
 			<fileset dir="${report.test.dir}" includes="TEST-*" />
 		</delete>
 		<junit fork="yes" haltonfailure="false">
-			<formatter type="xml" extention=".xml" usefile="true" />
+			<formatter type="xml" usefile="true" />
 			<classpath>
 				<fileset dir="${basedir}/lib">
 					<include name="*.jar" />
